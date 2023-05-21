@@ -32,7 +32,6 @@ DefineExternalTargetEx(
     ${Expression_AUTO_RUN_TEST}
 )
 
-
 DefineExternalTargetEx(
     Math Extern
     ${Expression_SOURCE_DIR}/Internal/Math
@@ -48,5 +47,5 @@ DefineExternalTargetEx(
     ${Expression_BUILD_TEST}
     ${Expression_AUTO_RUN_TEST}
 )
-                
+
 set(Configure_SUCCEEDED TRUE)
