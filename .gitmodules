@@ -4,3 +4,6 @@
 [submodule "CMake/Modules"]
 	path = CMake/Modules
 	url = https://github.com/chcly/CMakeModules.git
+[submodule "Internal/Math"]
+	path = Internal/Math
+	url = https://github.com/chcly/Module.Math.git

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(Template)
+project(Expression)
 
 # Use C++-17 by default.
 enable_language(CXX)
@@ -11,13 +11,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # CMake - Contains project local modules.
 #
 # CMake/Modules - Contains project independent modules.
-#   GitUpdate.cmake invokes python ${Template_SOURCE_DIR}/gitupdate.py
+#   GitUpdate.cmake invokes python ${Expression_SOURCE_DIR}/gitupdate.py
 #   to pull all submodules and update to head.
 #   If this fails, it will attempt to invoke git directly to pull 
 #   submodules. 
 list(APPEND CMAKE_MODULE_PATH 
-  ${Template_SOURCE_DIR}/CMake 
-  ${Template_SOURCE_DIR}/CMake/Modules
+  ${Expression_SOURCE_DIR}/CMake 
+  ${Expression_SOURCE_DIR}/CMake/Modules
 )
 include(Configure)
 if (NOT Configure_SUCCEEDED)
@@ -26,25 +26,25 @@ endif()
 
 
 
-if (Template_ExternalTarget)
-    set(TargetFolders ${Template_TargetFolders})
-    set(TargetName    ${Template_TargetName})
-    set(TargetGroup   ${Template_TargetGroup})
+if (Expression_ExternalTarget)
+    set(TargetFolders ${Expression_TargetFolders})
+    set(TargetName    ${Expression_TargetName})
+    set(TargetGroup   ${Expression_TargetGroup})
 else()
     add_subdirectory(CMake)
 
     set(TargetFolders TRUE)
-    set(TargetName Template)
+    set(TargetName Expression)
     set(TargetGroup )
 
-    set(Template_INCLUDE  ${Template_SOURCE_DIR})
-    set(Template_LIBRARY  ${TargetName})
+    set(Expression_INCLUDE  ${Expression_SOURCE_DIR})
+    set(Expression_LIBRARY  ${TargetName})
 endif()
 
 add_subdirectory(Source)
 
-if (Template_BUILD_TEST)
-    if (NOT Template_ExternalTarget)
+if (Expression_BUILD_TEST)
+    if (NOT Expression_ExternalTarget)
         add_gtest_source(Extern/ThirdParty)
     endif()
 

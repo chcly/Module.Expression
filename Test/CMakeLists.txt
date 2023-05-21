@@ -23,6 +23,6 @@ set_target_properties(
 )
 
 
-if (Template_AUTO_RUN_TEST)
+if (Expression_AUTO_RUN_TEST)
     run_test(${TestTargetName})
 endif()
