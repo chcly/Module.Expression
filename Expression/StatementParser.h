@@ -26,17 +26,17 @@
 
 namespace Rt2::Eq
 {
-    class StmtScanner;
+    class StatementScanner;
     class CallState;
     using SymbolArray = SimpleArray<Symbol*>;
 
-    class StmtParser final : public ParserBase
+    class StatementParser final : public ParserBase
     {
     private:
         SymbolArray _symbols;
         I16         _maxDepth{0x80};
 
-        using Parameter = void (StmtParser::*)(CallState& state);
+        using Parameter = void (StatementParser::*)(CallState& state);
 
     private:
         void parseImpl(IStream& input) override;
@@ -75,8 +75,8 @@ namespace Rt2::Eq
         void reset();
 
     public:
-        explicit StmtParser(I16 maxDepth = 0x80);
-        ~StmtParser() override;
+        explicit StatementParser(I16 maxDepth = 0x80);
+        ~StatementParser() override;
 
         const SymbolArray& symbols() const;
     };

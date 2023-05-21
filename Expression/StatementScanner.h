@@ -21,15 +21,15 @@
 */
 #pragma once
 #include "Expression/Token.h"
-#include "Utils/Array.h"
 #include "ParserBase/ScannerBase.h"
+#include "Utils/Array.h"
 
 namespace Rt2::Eq
 {
     using DoubleTable   = IndexCache<double>;
     using ScratchBuffer = SimpleArray<char>;
 
-    class StmtScanner final : public ScannerBase
+    class StatementScanner final : public ScannerBase
     {
     private:
         DoubleTable   _doubles;
@@ -45,11 +45,13 @@ namespace Rt2::Eq
         }
 
     public:
-        StmtScanner();
+        StatementScanner();
 
         void cleanup() override;
 
-        void   scan(Token& tok) override;
+        void scan(Token& tok) override;
+
         double real(const size_t& idx, double def = 0.0) const;
     };
-}  // namespace Jam::Eq
+
+}  // namespace Rt2::Eq

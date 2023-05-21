@@ -1,8 +1,8 @@
 #include <cstdio>
 #include "ExprData.inl"
-#include "Expression/Stmt.h"
-#include "Expression/StmtParser.h"
-#include "Expression/StmtScanner.h"
+#include "Expression/Statement.h"
+#include "Expression/StatementParser.h"
+#include "Expression/StatementScanner.h"
 #include "ThisDir.h"
 #include "Utils/StreamMethods.h"
 #include "gtest/gtest.h"
@@ -21,11 +21,11 @@ GTEST_TEST(Expression, Parse00c)
     StringStream ss;
     ss << "1000*x";
 
-    StmtParser code;
+    StatementParser code;
     code.read(ss);
     logSymbols(code.symbols());
 
-    Stmt eval;
+    Statement eval;
     eval.set("x", 2);
     eval.execute(code.symbols());
     EXPECT_DOUBLE_EQ((int)eval.peek(0), 2000.0);
@@ -36,11 +36,11 @@ GTEST_TEST(Expression, Parse00b)
     StringStream ss;
     ss << "mod(cos(x), 3)";
 
-    StmtParser code;
+    StatementParser code;
     code.read(ss);
     logSymbols(code.symbols());
 
-    Stmt eval;
+    Statement eval;
     eval.set("x", Real(Pi));
     eval.execute(code.symbols());
     EXPECT_DOUBLE_EQ((int)eval.peek(0), 2.0);
@@ -51,11 +51,11 @@ GTEST_TEST(Expression, Parse00a)
     StringStream ss;
     ss << "mod(x,b)";
 
-    StmtParser code;
+    StatementParser code;
     code.read(ss);
     logSymbols(code.symbols());
 
-    Stmt eval;
+    Statement eval;
     eval.set("b", 5);
 
     int i = 0;
@@ -73,13 +73,13 @@ GTEST_TEST(Expression, Parse009)
     StringStream ss;
 
     ss << "(3.1415926535897932*x-a)/(x+b)";
-    StmtParser parse;
+    StatementParser parse;
     parse.read(ss);
 
     constexpr Real a = 1;
     constexpr Real b = 1;
 
-    Stmt eval;
+    Statement eval;
     int  i = 0;
 
     eval.set("x", i);
@@ -108,10 +108,10 @@ GTEST_TEST(Expression, Parse008)
 {
     StringStream ss;
     ss << "1.0 + 9.0 / 10.0 + 9.0 / 100.0 + 6.0 / 1000.0 + 5.0 / 10000.0";
-    StmtParser parse;
+    StatementParser parse;
     parse.read(ss);
     logSymbols(parse.symbols());
-    Stmt eval;
+    Statement eval;
     Real result = eval.execute(parse.symbols());
     //Console::println(SetD({1.9965, result}, 0, 4, true));
     EXPECT_DOUBLE_EQ(result, 1.9965);
@@ -130,11 +130,11 @@ GTEST_TEST(Expression, Parse007)
     StringStream ss;
     ss << "a=sin(x/2),b=4*atan(1)";
 
-    StmtParser parse;
+    StatementParser parse;
     parse.read(ss);
     logSymbols(parse.symbols());
 
-    Stmt eval;
+    Statement eval;
     eval.set("x", 3.1415926535897932384626433832795);
     eval.execute(parse.symbols());
 
@@ -148,7 +148,7 @@ GTEST_TEST(Expression, Parse006)
     StringStream ss;
     ss << "x={0,1,2,3}, y=[4,5,6,7], z={8,9,10,11}";
 
-    StmtParser parse;
+    StatementParser parse;
     parse.read(ss);
 
     const SymbolArray& exec = parse.symbols();
@@ -156,7 +156,7 @@ GTEST_TEST(Expression, Parse006)
 
     ExpectDataTest(exec, Parse6Values, exec.size());
 
-    Stmt       eval;
+    Statement       eval;
     const Real v = eval.execute(exec);
     EXPECT_EQ(v, Eq::InitialHash + 2);
 
@@ -197,13 +197,13 @@ GTEST_TEST(Expression, Parse004)
     StringStream ss;
     ss << "y = 7+2*2";
 
-    StmtParser parse;
+    StatementParser parse;
     parse.read(ss);
     const SymbolArray& exec = parse.symbols();
     EXPECT_EQ(exec.size(), 7);
     logSymbols(exec);
 
-    Stmt eval;
+    Statement eval;
     EXPECT_EQ(eval.execute(exec), 11);
     EXPECT_EQ(eval.get("y"), 11);
 }
@@ -215,7 +215,7 @@ GTEST_TEST(Expression, Parse003)
     StringStream ss;
     ss << "y = 7+2*2";
 
-    StmtParser parse;
+    StatementParser parse;
     parse.read(ss);
     const SymbolArray& exec = parse.symbols();
     logSymbols(exec);
@@ -232,7 +232,7 @@ GTEST_TEST(Expression, Parse002)
     ss << "# Tests recursive assignment.." << std::endl;
     ss << "a=b=c=d=e=f=1";
 
-    StmtParser parse;
+    StatementParser parse;
     parse.read(ss);
     const SymbolArray& exec = parse.symbols();
     logSymbols(exec);
@@ -240,7 +240,7 @@ GTEST_TEST(Expression, Parse002)
     EXPECT_EQ(exec.size(), 13);
     ExpectDataTest(exec, Parse2Values, exec.size());
 
-    Stmt eval;
+    Statement eval;
     EXPECT_EQ(eval.execute(exec), 1);
     EXPECT_EQ(eval.get("a", -1), 1);
     EXPECT_EQ(eval.get("b", -1), 1);
@@ -257,7 +257,7 @@ GTEST_TEST(Expression, Parse001)
     StringStream ss;
     ss << "y = [0,1,2,3]";
 
-    StmtParser parse;
+    StatementParser parse;
     parse.read(ss);
     const SymbolArray& exec = parse.symbols();
 
@@ -265,7 +265,7 @@ GTEST_TEST(Expression, Parse001)
     EXPECT_EQ(exec.size(), 8);
     ExpectDataTest(exec, Parse1Values, exec.size());
 
-    Stmt eval;
+    Statement eval;
     EXPECT_EQ(eval.execute(exec), Eq::InitialHash);
 
     ValueList v;
@@ -288,7 +288,7 @@ GTEST_TEST(Expression, Scan2)
     fs.open(fileName);
     EXPECT_TRUE(fs.is_open());
 
-    StmtScanner sc;
+    StatementScanner sc;
     sc.attach(&fs, PathUtil(fileName));
 
     Token  tok;
@@ -315,7 +315,7 @@ GTEST_TEST(Expression, Scan1)
     fs.open(fileName);
     EXPECT_TRUE(fs.is_open());
 
-    StmtScanner sc;
+    StatementScanner sc;
     sc.attach(&fs, PathUtil(fileName));
 
     constexpr TokenType exp[] = {
@@ -353,7 +353,7 @@ GTEST_TEST(Expression, Scan0)
     fs.open(Scan0);
     EXPECT_TRUE(fs.is_open());
 
-    StmtScanner sc;
+    StatementScanner sc;
     sc.attach(&fs, PathUtil(Scan0));
 
     Token tok;

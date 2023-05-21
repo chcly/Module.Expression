@@ -1,4 +1,4 @@
-#include "Expression/Stmt.h"
+#include "Expression/Statement.h"
 #include "Math/Math.h"
 #include "Utils/StreamMethods.h"
 
@@ -34,17 +34,17 @@ namespace Rt2::Eq
         }
     }
 
-    void Stmt::push(const Math::Real& v, const size_t& idx, const U8 flag)
+    void Statement::push(const Math::Real& v, const size_t& idx, const U8 flag)
     {
         _stack.push({v, idx, flag});
     }
 
-    void Stmt::push(const Symbol* sy)
+    void Statement::push(const Symbol* sy)
     {
         push(sy->value());
     }
 
-    void Stmt::store(const Symbol* sym)
+    void Statement::store(const Symbol* sym)
     {
         size_t idx = _table.find(sym->name());
         if (idx == Npos)
@@ -55,7 +55,7 @@ namespace Rt2::Eq
         push(_table.at(idx).v, idx, StackValue::Id);
     }
 
-    void Stmt::add()
+    void Statement::add()
     {
         if (_stack.size() > 1)
         {
@@ -67,7 +67,7 @@ namespace Rt2::Eq
             argError("add");
     }
 
-    void Stmt::sub()
+    void Statement::sub()
     {
         if (_stack.size() > 1)
         {
@@ -79,7 +79,7 @@ namespace Rt2::Eq
             argError("sub");
     }
 
-    void Stmt::neg()
+    void Statement::neg()
     {
         if (_stack.isNotEmpty())
         {
@@ -90,7 +90,7 @@ namespace Rt2::Eq
             argError("neg");
     }
 
-    void Stmt::mul()
+    void Statement::mul()
     {
         if (_stack.size() > 1)
         {
@@ -102,7 +102,7 @@ namespace Rt2::Eq
             argError("mul");
     }
 
-    void Stmt::div()
+    void Statement::div()
     {
         if (_stack.size() > 1)
         {
@@ -119,7 +119,7 @@ namespace Rt2::Eq
             argError("div");
     }
 
-    void Stmt::mod()
+    void Statement::mod()
     {
         if (_stack.size() > 1)
         {
@@ -131,7 +131,7 @@ namespace Rt2::Eq
             argError("mod");
     }
 
-    void Stmt::pow()
+    void Statement::pow()
     {
         if (_stack.size() > 1)
         {
@@ -143,7 +143,7 @@ namespace Rt2::Eq
             argError("pow");
     }
 
-    void Stmt::group()
+    void Statement::group()
     {
         if (_stack.size() > 1)
         {
@@ -170,7 +170,7 @@ namespace Rt2::Eq
             argError("group");
     }
 
-    void Stmt::assign()
+    void Statement::assign()
     {
         if (_stack.size() > 1)
         {
@@ -213,7 +213,7 @@ namespace Rt2::Eq
             argError("assign");
     }
 
-    void Stmt::mathFncA1(WrapFuncA1 f)
+    void Statement::mathFncA1(WrapFuncA1 f)
     {
         if (_stack.size() > 1)
         {
@@ -232,7 +232,7 @@ namespace Rt2::Eq
                 "at least two elements on the stack.");
     }
 
-    void Stmt::mathFncA2(WrapFuncA2 f)
+    void Statement::mathFncA2(WrapFuncA2 f)
     {
         if (_stack.size() > 2)
         {
@@ -258,7 +258,7 @@ namespace Rt2::Eq
         return r < 0 ? b + r : r;
     }
 
-    void Stmt::eval(const Symbol* sy)
+    void Statement::eval(const Symbol* sy)
     {
         // clang-format off
     switch (sy->type()) {
@@ -305,7 +305,7 @@ namespace Rt2::Eq
         // clang-format on
     }
 
-    Math::Real Stmt::executeImpl(const SymbolArray& val)
+    Math::Real Statement::executeImpl(const SymbolArray& val)
     {
         _stack.resizeFast(0);
         for (const auto& sy : val)
@@ -314,7 +314,7 @@ namespace Rt2::Eq
         return _stack.empty() ? 0 : _stack.top().v;
     }
 
-    void Stmt::argError(const char* op)
+    void Statement::argError(const char* op)
     {
         error(
             "not enough arguments "
@@ -323,7 +323,7 @@ namespace Rt2::Eq
             "' operation ");
     }
 
-    Math::Real Stmt::execute(const SymbolArray& val)
+    Math::Real Statement::execute(const SymbolArray& val)
     {
         try
         {
@@ -336,7 +336,7 @@ namespace Rt2::Eq
         }
     }
 
-    void Stmt::set(const String& name, const Math::Real value)
+    void Statement::set(const String& name, const Math::Real value)
     {
         if (const size_t idx = _table.find(name);
             idx == Npos)
@@ -345,18 +345,18 @@ namespace Rt2::Eq
             _table[idx] = {value, Npos, StackValue::Value};
     }
 
-    void Stmt::set(const VInt index, const Math::Real value)
+    void Statement::set(const VInt index, const Math::Real value)
     {
         if (index < _table.size())
             _table[index] = {value, Npos, StackValue::Value};
     }
 
-    VInt Stmt::indexOf(const String& name) const
+    VInt Statement::indexOf(const String& name) const
     {
         return _table.find(name);
     }
 
-    Math::Real Stmt::get(const String& name, const Math::Real def)
+    Math::Real Statement::get(const String& name, const Math::Real def)
     {
         if (const size_t idx = _table.find(name);
             idx != Npos)
@@ -364,7 +364,7 @@ namespace Rt2::Eq
         return def;
     }
 
-    Math::Real Stmt::peek(I32 idx)
+    Math::Real Statement::peek(I32 idx)
     {
         idx = (_stack.topI() - idx);
         if (idx >= 0 && idx < _stack.sizeI())
@@ -372,7 +372,7 @@ namespace Rt2::Eq
         return 0;
     }
 
-    void Stmt::get(const String& name, ValueList& dest)
+    void Statement::get(const String& name, ValueList& dest)
     {
         dest.resizeFast(0);
         const U32 hashKey = (U32)get(name, -1);
@@ -389,7 +389,7 @@ namespace Rt2::Eq
         }
     }
 
-    Stmt::~Stmt()
+    Statement::~Statement()
     {
         for (const auto& ele : _groups)
             delete ele.second;

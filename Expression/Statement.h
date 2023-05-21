@@ -1,13 +1,13 @@
 #pragma once
 #include "Expression/StackValue.h"
-#include "Expression/StmtParser.h"
+#include "Expression/StatementParser.h"
 
 namespace Rt2::Eq
 {
     typedef  double (*WrapFuncA1)(double a1);
     typedef  double (*WrapFuncA2)(double a1, double a2);
 
-    class Stmt
+    class Statement
     {
     private:
         EvalStack     _stack;
@@ -46,8 +46,8 @@ namespace Rt2::Eq
         [[noreturn]] void argError(const char*);
 
     public:
-        Stmt() = default;
-        ~Stmt();
+        Statement() = default;
+        ~Statement();
 
         void set(const String& name, Math::Real value);
         void set(VInt index, Math::Real value);
@@ -64,7 +64,7 @@ namespace Rt2::Eq
     };
 
     template <typename... Args>
-    void Stmt::error(Args&&... args)
+    void Statement::error(Args&&... args)
     {
         OutputStringStream stream;
         ((stream << std::forward<Args>(args)), ...);

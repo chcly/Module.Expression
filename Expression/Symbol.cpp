@@ -149,4 +149,4 @@ namespace Rt2::Eq
         out << " ";
     }
 
-}  // namespace Jam::Eq
+}  // namespace Rt2::Eq

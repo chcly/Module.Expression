@@ -117,10 +117,10 @@ namespace Rt2::Eq
             return MathTanh;
         case TOK_PI:
             return MathPi;
-        //case TOK_E:
-        //    return MathE;
+        // case TOK_E:
+        //     return MathE;
         default:
             throw Exception("unknown math token");
         }
     }
-}  // namespace Jam::Eq
+}  // namespace Rt2::Eq

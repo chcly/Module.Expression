@@ -19,22 +19,21 @@
   3. This notice may not be removed or altered from any source distribution.
 -------------------------------------------------------------------------------
 */
-#include "Expression/StmtParser.h"
-#include "Expression/StmtScanner.h"
+#include "Expression/StatementParser.h"
 #include "Expression/CallState.h"
+#include "Expression/StatementScanner.h"
 #include "Math/Math.h"
 #include "Utils/StreamMethods.h"
 
 namespace Rt2::Eq
 {
-
-    StmtParser::StmtParser(const I16 maxDepth) :
+    StatementParser::StatementParser(const I16 maxDepth) :
         _maxDepth(maxDepth)
     {
-        _scanner = new StmtScanner();
+        _scanner = new StatementScanner();
     }
 
-    StmtParser::~StmtParser()
+    StatementParser::~StatementParser()
     {
         for (const auto& symbol : _symbols)
             delete symbol;
@@ -43,12 +42,12 @@ namespace Rt2::Eq
         _scanner = nullptr;
     }
 
-    const SymbolArray& StmtParser::symbols() const
+    const SymbolArray& StatementParser::symbols() const
     {
         return _symbols;
     }
 
-    void StmtParser::reset()
+    void StatementParser::reset()
     {
         for (const auto& symbol : _symbols)
             delete symbol;
@@ -56,39 +55,39 @@ namespace Rt2::Eq
         cleanup();
     }
 
-    Symbol* StmtParser::createSymbol(const int8_t& type)
+    Symbol* StatementParser::createSymbol(const int8_t& type)
     {
         Symbol* node = new Symbol((SymbolType)type);
         _symbols.push_back(node);
         return node;
     }
 
-    String StmtParser::string(const size_t& idx) const
+    String StatementParser::string(const size_t& idx) const
     {
         return _scanner->string(idx);
     }
 
-    String StmtParser::stringToken(const int32_t& idx)
+    String StatementParser::stringToken(const int32_t& idx)
     {
         return _scanner->string(token(idx).index());
     }
 
-    Math::Real StmtParser::numericalToken(const int32_t& idx)
+    Math::Real StatementParser::numericalToken(const int32_t& idx)
     {
-        return ((StmtScanner*)_scanner)->real(token(idx).index());
+        return ((StatementScanner*)_scanner)->real(token(idx).index());
     }
 
-    int StmtParser::integer(const size_t& idx) const
+    int StatementParser::integer(const size_t& idx) const
     {
         return _scanner->integer(idx);
     }
 
-    Math::Real StmtParser::real(const size_t& idx) const
+    Math::Real StatementParser::real(const size_t& idx) const
     {
-        return ((Eq::StmtScanner*)_scanner)->real(idx);
+        return ((Eq::StatementScanner*)_scanner)->real(idx);
     }
 
-    void StmtParser::ruleCsv(CallState& state, const Parameter& r0)
+    void StatementParser::ruleCsv(CallState& state, const Parameter& r0)
     {
         state.depthGuard();
 
@@ -110,7 +109,7 @@ namespace Rt2::Eq
         state.setCommaCount(nr);
     }
 
-    void StmtParser::ruleFnc(CallState& state)
+    void StatementParser::ruleFnc(CallState& state)
     {
         state.depthGuard();
 
@@ -122,7 +121,7 @@ namespace Rt2::Eq
             error("expected an round open bracket.");
 
         advanceCursor(2);
-        ruleCsv(state, &StmtParser::ruleOp);
+        ruleCsv(state, &StatementParser::ruleOp);
 
         if (tokenType(0) != TOK_C_PAR)
             error("expected an round close bracket.");
@@ -147,7 +146,7 @@ namespace Rt2::Eq
         }
     }
 
-    void StmtParser::ruleOp3(CallState& state)
+    void StatementParser::ruleOp3(CallState& state)
     {
         state.depthGuard();
         // <Op3> ::= <Fnc>
@@ -209,7 +208,7 @@ namespace Rt2::Eq
               SetI({t0, t1}));
     }
 
-    void StmtParser::ruleOp2(CallState& state)
+    void StatementParser::ruleOp2(CallState& state)
     {
         state.depthGuard();
         // <Op2>::= <Op2> '*' <Op3>
@@ -251,7 +250,7 @@ namespace Rt2::Eq
         }
     }
 
-    void StmtParser::ruleOp1(CallState& state)
+    void StatementParser::ruleOp1(CallState& state)
     {
         state.depthGuard();
         // <Op1> ::= <Op1> '+' <Op2>
@@ -280,7 +279,7 @@ namespace Rt2::Eq
         }
     }
 
-    void StmtParser::ruleOp(CallState& state)
+    void StatementParser::ruleOp(CallState& state)
     {
         state.depthGuard();
         // <Op> ::= '-' <Op>
@@ -310,7 +309,7 @@ namespace Rt2::Eq
         ruleOp1(state);
     }
 
-    void StmtParser::ruleAsn(CallState& state)
+    void StatementParser::ruleAsn(CallState& state)
     {
         state.depthGuard();
         // <Asn>  ::= Id '=' <SO> <OpL> <SC>
@@ -329,7 +328,7 @@ namespace Rt2::Eq
                     stringToken(0));
             advanceCursor(3);
 
-            ruleCsv(state, &StmtParser::ruleOp);
+            ruleCsv(state, &StatementParser::ruleOp);
             if (!isMatchingCloseToken(t2, tokenType(0)))
             {
                 error("invalid matching close token",
@@ -362,19 +361,19 @@ namespace Rt2::Eq
         ruleOp(state);
     }
 
-    void StmtParser::ruleEq(CallState& state)
+    void StatementParser::ruleEq(CallState& state)
     {
         state.resetGuard();
         // <Eq> ::= <Asl>
         //        | <Op>
         //        |
         if (tokenType(1) == TOK_EQUALS)
-            ruleCsv(state, &StmtParser::ruleAsn);
+            ruleCsv(state, &StatementParser::ruleAsn);
         else
             ruleOp(state);
     }
 
-    void StmtParser::parseImpl(IStream& input)
+    void StatementParser::parseImpl(IStream& input)
     {
         // make sure the token cursor is at zero
         // initially and attach the input stream
@@ -404,15 +403,15 @@ namespace Rt2::Eq
         cleanup();
     }
 
-    void StmtParser::writeImpl(OStream& output, int format)
+    void StatementParser::writeImpl(OStream& output, int format)
     {
         // nadda
     }
 
-    void StmtParser::cleanup()
+    void StatementParser::cleanup()
     {
         _tokens.clear();
         if (_scanner)
-            ((StmtScanner*)_scanner)->cleanup();
+            ((StatementScanner*)_scanner)->cleanup();
     }
-}  // namespace Jam::Eq
+}  // namespace Rt2::Eq

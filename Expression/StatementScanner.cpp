@@ -19,15 +19,15 @@
   3. This notice may not be removed or altered from any source distribution.
 -------------------------------------------------------------------------------
 */
-#include "Expression/StmtScanner.h"
+#include "Expression/StatementScanner.h"
 #include "Expression/Token.h"
 #include "Utils/Char.h"
 
 namespace Rt2::Eq
 {
-    StmtScanner::StmtScanner() = default;
+    StatementScanner::StatementScanner() = default;
 
-    void StmtScanner::cleanup()
+    void StatementScanner::cleanup()
     {
         _doubles.clear();
         ScannerBase::cleanup();
@@ -45,7 +45,7 @@ namespace Rt2::Eq
         return TOK_NULL;
     }
 
-    void StmtScanner::scanIdentifier(Token& tok)
+    void StatementScanner::scanIdentifier(Token& tok)
     {
         int ch = _stream->peek();
         if (!isLetter(ch))
@@ -81,7 +81,7 @@ namespace Rt2::Eq
         }
     }
 
-    void StmtScanner::scanNumber(Token& tok)
+    void StatementScanner::scanNumber(Token& tok)
     {
         int ch = _stream->peek();
         if (!isDecimal(ch))
@@ -126,7 +126,7 @@ namespace Rt2::Eq
         }
     }
 
-    void StmtScanner::scan(Token& tok)
+    void StatementScanner::scan(Token& tok)
     {
         if (_stream == nullptr)
             syntaxError("No supplied stream");
@@ -226,7 +226,7 @@ namespace Rt2::Eq
         tok.setType(TOK_EOF);
     }
 
-    double StmtScanner::real(const size_t& idx, const double def) const
+    double StatementScanner::real(const size_t& idx, const double def) const
     {
         if (idx < _doubles.size())
             return _doubles.at(idx);

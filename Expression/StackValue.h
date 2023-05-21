@@ -20,7 +20,7 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
-#include "StmtParser.h"
+#include "StatementParser.h"
 #include "Utils/Hash.h"
 #include "Utils/HashMap.h"
 #include "Utils/Stack.h"
