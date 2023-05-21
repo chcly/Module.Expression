@@ -7,3 +7,9 @@
 [submodule "Internal/Math"]
 	path = Internal/Math
 	url = https://github.com/chcly/Module.Math.git
+[submodule "Internal/Utils"]
+	path = Internal/Utils
+	url = https://github.com/chcly/Module.Utils.git
+[submodule "Internal/ParserBase"]
+	path = Internal/ParserBase
+	url = https://github.com/chcly/Module.ParserBase.git

@@ -24,4 +24,29 @@ configure_gtest(${Expression_SOURCE_DIR}/Test/googletest
                 ${Expression_SOURCE_DIR}/Test/googletest/googletest/include)
 
 
+DefineExternalTargetEx(
+    Utils Extern
+    ${Expression_SOURCE_DIR}/Internal/Utils 
+    ${Expression_SOURCE_DIR}/Internal/Utils
+    ${Expression_BUILD_TEST}
+    ${Expression_AUTO_RUN_TEST}
+)
+
+
+DefineExternalTargetEx(
+    Math Extern
+    ${Expression_SOURCE_DIR}/Internal/Math
+    ${Expression_SOURCE_DIR}/Internal/Math
+    ${Expression_BUILD_TEST}
+    ${Expression_AUTO_RUN_TEST}
+)
+
+DefineExternalTargetEx(
+    ParserBase Extern
+    ${Expression_SOURCE_DIR}/Internal/ParserBase 
+    ${Expression_SOURCE_DIR}/Internal/ParserBase
+    ${Expression_BUILD_TEST}
+    ${Expression_AUTO_RUN_TEST}
+)
+                
 set(Configure_SUCCEEDED TRUE)
