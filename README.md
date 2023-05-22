@@ -1,6 +1,6 @@
 # Expression
 
-Postfix based text compiler to evaluate functions and store variables.
+Postfix based text compiler to evaluate expressions and store variables.
 
 ## Testing
 
